@@ -18,14 +18,19 @@ env:
 
 jobs:
   ubuntu-makefile:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev libgles2-mesa-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - name: 'Install CUDA'
       run: ${{ github.workspace }}/scripts/deploy-cuda.sh
@@ -74,9 +79,9 @@ jobs:
 
 
   ubuntu-vcpkg-opencv4-cuda:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
@@ -84,10 +89,13 @@ jobs:
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -129,35 +137,38 @@ jobs:
         LD_LIBRARY_PATH: "/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH"
       run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -EnableCUDA -EnableCUDNN -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-cuda-${{ runner.os }}
+        name: cfg
         path: cfg
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-cuda-${{ runner.os }}
+        name: data
         path: data
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-cuda-${{ runner.os }}
+        name: darknet-vcpkg-cuda-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-cuda-${{ runner.os }}
+        name: darknet-vcpkg-cuda-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   ubuntu-vcpkg-opencv3:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -186,16 +197,19 @@ jobs:
 
 
   ubuntu-vcpkg-opencv2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -224,14 +238,18 @@ jobs:
 
 
   ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - uses: lukka/get-cmake@latest
 
@@ -244,33 +262,30 @@ jobs:
         LD_LIBRARY_PATH: "/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH"
       run: ${{ github.workspace }}/build.ps1 -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   ubuntu-cuda:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev libgles2-mesa-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - uses: lukka/get-cmake@latest
 
@@ -293,28 +308,20 @@ jobs:
         LD_LIBRARY_PATH: "/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH"
       run: ${{ github.workspace }}/build.ps1 -EnableOPENCV -EnableCUDA -EnableCUDNN -DisableInteractive -DoNotUpdateTOOL
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-cuda-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-cuda-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-cuda-${{ runner.os }}
+        name: darknet-cuda-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-cuda-${{ runner.os }}
+        name: darknet-cuda-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   ubuntu-no-ocv-cpp:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -330,9 +337,17 @@ jobs:
 
 
   ubuntu-setup-sh:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - name: 'Setup vcpkg and NuGet artifacts backend'
       shell: bash
@@ -361,7 +376,7 @@ jobs:
   osx-vcpkg:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
@@ -395,28 +410,20 @@ jobs:
       shell: pwsh
       run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-vcpkg-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-vcpkg-${{ runner.os }}
+        name: darknet-vcpkg-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-${{ runner.os }}
+        name: darknet-vcpkg-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   osx:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: brew install opencv libomp
@@ -427,28 +434,20 @@ jobs:
       shell: pwsh
       run: ${{ github.workspace }}/build.ps1 -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   osx-no-ocv-no-omp-cpp:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -460,7 +459,7 @@ jobs:
   win-vcpkg:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
@@ -491,32 +490,24 @@ jobs:
       shell: pwsh
       run: ${{ github.workspace }}/build.ps1 -UseVCPKG -ForceLocalVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-vcpkg-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-vcpkg-${{ runner.os }}
+        name: darknet-vcpkg-${{ runner.os }}-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-${{ runner.os }}
+        name: darknet-vcpkg-${{ runner.os }}-dlls
         path: ${{ github.workspace }}/build_release/*.dll
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-vcpkg-${{ runner.os }}
+        name: darknet-vcpkg-${{ runner.os }}-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   win-vcpkg-port:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: 'Setup vcpkg and NuGet artifacts backend'
       shell: bash
@@ -545,7 +536,7 @@ jobs:
   win-intlibs:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -553,32 +544,24 @@ jobs:
       shell: pwsh
       run: ${{ github.workspace }}/build.ps1 -DisableInteractive -DoNotUpdateTOOL
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
-        path: cfg
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
-        path: data
-    - uses: actions/upload-artifact@v3
-      with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-intlibs-darknet
         path: ${{ github.workspace }}/*dark*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-intlibs-dlls
         path: ${{ github.workspace }}/3rdparty/pthreads/bin/*.dll
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: darknet-${{ runner.os }}
+        name: darknet-${{ runner.os }}-intlibs-uselib
         path: ${{ github.workspace }}/uselib*
 
 
   win-setup-ps1:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: 'Setup vcpkg and NuGet artifacts backend'
       shell: bash
@@ -607,7 +590,7 @@ jobs:
   win-vcpkg-base-cpp:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -643,7 +626,7 @@ jobs:
   win-csharp:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -655,7 +638,7 @@ jobs:
   win-intlibs-cuda:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: 'Install CUDA'
       run: ${{ github.workspace }}/scripts/deploy-cuda.ps1
 
@@ -673,7 +656,7 @@ jobs:
   win-powershell51:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -685,7 +668,7 @@ jobs:
   mingw:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 

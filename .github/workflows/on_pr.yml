@@ -8,14 +8,19 @@ env:
 
 jobs:
   ubuntu-makefile:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev libgles2-mesa-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - name: 'Install CUDA'
       run: ${{ github.workspace }}/scripts/deploy-cuda.sh
@@ -64,16 +69,19 @@ jobs:
 
 
   ubuntu-vcpkg-opencv4-cuda:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -103,20 +111,23 @@ jobs:
         CUDA_PATH: "/usr/local/cuda"
         CUDA_TOOLKIT_ROOT_DIR: "/usr/local/cuda"
         LD_LIBRARY_PATH: "/usr/local/cuda/lib64:/usr/local/cuda/lib64/stubs:$LD_LIBRARY_PATH"
-      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -EnableCUDA -EnableCUDNN -DisableInteractive -DoNotUpdateTOOL
+      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -EnableCUDA -EnableCUDNN -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
 
   ubuntu-vcpkg-opencv3:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -135,16 +146,19 @@ jobs:
 
 
   ubuntu-vcpkg-opencv2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libgles2-mesa-dev libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+        sudo apt-get install -y --no-install-recommends yasm nasm gperf automake autoconf libtool pkg-config autoconf-archive libx11-dev libxft-dev libxext-dev libxrandr-dev libxi-dev libxcursor-dev libxdamage-dev libxinerama-dev libdbus-1-dev libxtst-dev libltdl-dev
+
     - name: Clean downloads
       run: sudo apt-get clean
 
@@ -163,14 +177,18 @@ jobs:
 
 
   ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - uses: lukka/get-cmake@latest
 
@@ -185,14 +203,19 @@ jobs:
 
 
   ubuntu-cuda:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - name: Update apt
-      run: sudo apt update
-    - name: Install dependencies
-      run: sudo apt install libopencv-dev libgles2-mesa-dev
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libopencv-dev
+        sudo apt-get install -y mono-devel zlib1g
+        sudo apt-get install -y libgles2-mesa-dev
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - uses: lukka/get-cmake@latest
 
@@ -217,9 +240,9 @@ jobs:
 
 
   ubuntu-no-ocv-cpp:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -235,9 +258,17 @@ jobs:
 
 
   ubuntu-setup-sh:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
+    - name: Update apt & install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mono-devel
+
+    - name: Clean downloads
+      run: sudo apt-get clean
 
     - name: 'Setup vcpkg and NuGet artifacts backend'
       shell: bash
@@ -256,7 +287,7 @@ jobs:
   osx-vcpkg:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: brew install libomp yasm nasm pkg-config automake autoconf-archive
@@ -274,13 +305,13 @@ jobs:
 
     - name: 'Build'
       shell: pwsh
-      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL
+      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
 
   osx:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: brew install opencv libomp
@@ -295,7 +326,7 @@ jobs:
   osx-no-ocv-no-omp-cpp:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -307,7 +338,7 @@ jobs:
   win-vcpkg:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -322,13 +353,13 @@ jobs:
 
     - name: 'Build'
       shell: pwsh
-      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -ForceLocalVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL
+      run: ${{ github.workspace }}/build.ps1 -UseVCPKG -ForceLocalVCPKG -DoNotUpdateVCPKG -EnableOPENCV -DisableInteractive -DoNotUpdateTOOL -BuildInstaller
 
 
   win-intlibs:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -340,7 +371,7 @@ jobs:
   win-setup-ps1:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: 'Setup vcpkg and NuGet artifacts backend'
       shell: bash
@@ -359,7 +390,7 @@ jobs:
   win-vcpkg-base-cpp:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -385,7 +416,7 @@ jobs:
   win-csharp:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -397,7 +428,7 @@ jobs:
   win-intlibs-cuda:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: 'Install CUDA'
       run: ${{ github.workspace }}/scripts/deploy-cuda.ps1
 
@@ -415,7 +446,7 @@ jobs:
   win-powershell51:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
@@ -427,7 +458,7 @@ jobs:
   mingw:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: lukka/get-cmake@latest
 
